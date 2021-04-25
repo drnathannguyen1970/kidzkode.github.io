@@ -142,6 +142,25 @@
             text-align: left;
         }
 
+        .solutionTyping {
+            border: 2px dashed grey;
+            background-color: black;
+            color: white;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            
+        }
+
+        .solutionTypingBox{
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 5px;
+            font-size: 20px;
+            border-radius: 10px;
+        }
+
         a {
             text-decoration: none;
             display: inline-block;
@@ -170,7 +189,7 @@
         .select{
             background-color: #0563af;
             color: white;
-            padding: 2px;
+            padding: 5px;
             width: 250px;
             height: 35px;
             border: none;
@@ -198,15 +217,17 @@
             <!-- <img class="congratulationBanner" src="congratulation.png" width="500px" height="300px" alt=""> -->
 
             <div class="navigation" onchange="changeLevel()">
-                <select name="" id="" class="select">
-                    <option value="1">Level 1</option>
-                    <option value="2">Level 2</option>
-                    <option value="3">Level 3</option>
-                    <option value="4">Level 4</option>
-                    <option value="5">Level 5</option>
+
+                <select name="mode" id="mode" class="select" onchange="toggleMode()">
+                    <option value="typing">Typing</option>
+                    <option value="thinking">Thinking</option>
                 </select>
 
-                <a href="#" class="previous round">&#8249;</a>
+
+                <select name="level" id="level" class="select">
+                </select>
+
+                <a href="#" class="previous round" onclick="prev()">&#8249;</a>
                 <a href="#" class="next round" onclick="next()">&#8250;</a>
 
                
@@ -221,8 +242,17 @@
             <img class="mario" src="images/cry.gif" alt="">
 
             <div class="box">
-                <p class="question"></p>
-                <p class="solution"></p>
+                <div class="question"></div>
+                <div class="solutionTyping">
+                    <textarea name="solutionTypingBox" id="solutionTypingBox" cols="100" rows="6" class="solutionTypingBox"></textarea>      
+                    <div>
+                        <a href="#" class="next" id="btnCheck" onclick="checkAnswer()">Check answer</a>
+                    </div>
+                </div>
+              
+
+                <div class="solution" style="display: none;"></div>
+               
             </div>
            
         </div>
@@ -260,6 +290,7 @@
 <script src="questions9.js"></script>
 <script src="questions10.js"></script>
 
+<script src="utils.js"></script>
 <script>
 
 
@@ -272,13 +303,55 @@
     var currentLevel = 1
 
     var currentLevelQuestions = []
+    var mode = 'typing'
 
 
+    initSelect()
     changeLevel()
+
+    function checkAnswer(){
+        let user_answer = document.querySelector('.solutionTypingBox').value
+        let answer = currentLevelQuestions[currentQuestion].answer
+        let percent = 100*(similar_text(user_answer, answer)/user_answer.length)
+
+        console.log(percent)
+
+        if (percent>90){
+            alert('Excellent')
+        } else if (percent>80){
+            alert('Well-done but you can improve it')
+        } else{
+            alert('It is not very correct. Please click typing to see the answer and practice it')
+        }
+        
+    }
+
+    function toggleMode(){
+
+        mode = document.querySelector('#mode').value
+
+        if (mode == 'typing'){
+            document.querySelector('.solution').style.display = 'block'
+            document.querySelector('.solutionTyping').style.display = 'none'
+        }
+        else if(mode == 'thinking'){
+            document.querySelector('.solution').style.display = 'none'
+            document.querySelector('.solutionTyping').style.display = 'block'
+        }
+    }
+
+    function initSelect(){
+        for (let index = 1; index < 101; index++) {
+            const option = document.createElement('option')
+            option.text  = "Level "+index
+            option.value = index
+            document.querySelector('#level').append(option)         
+        }
+    }
 
     function changeLevel(){
 
-        level = document.querySelector('.select').value
+        level = document.querySelector('#level').value
         console.log(level)
         currentLevelQuestions = []
         questions.forEach(q => {
@@ -293,7 +366,21 @@
     }
 
     function next() {
+        let len = currentLevelQuestions.length
+        if (currentQuestion >= len-1) {
+            alert('There is no more question')
+            return
+        }
         currentQuestion++
+        reset()
+    }
+
+    function prev() {
+        if (currentQuestion <=0) {
+            alert('There is no previous question')
+            return
+        }
+        currentQuestion--
         reset()
     }
 
@@ -302,7 +389,7 @@
         el.style.animation = 'none';
         el.offsetHeight; /* trigger reflow */
         el.style.animation = null; 
-        }
+    }
 
     function reset() {
         document.querySelector(".question").innerHTML = currentLevelQuestions[currentQuestion].question
