@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Python Fun Learning Game</title>
+    <style>
+        /* html {
+            background: url("bg2.jpg") repeat center center;
+            -webkit-background-size: 100%;
+            -moz-background-size: 100%;
+            -o-background-size: 100%;
+            background-size: 100%;
+            max-width: 100%;
+        } */
+        html {
+            /* The image used */
+            background-image: url("images/bg2.jpg");
+
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        /* .main{
+    border: 5px solid orange;
+    width: 80%;
+    margin: auto;
+    height: 100%;
+} */
+
+        .box {
+            width: 80%;
+            height: 50%;
+
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            margin: auto;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .sprite {
+            width: 200px;
+            height: 200px;
+            position: relative;
+       
+            top: 100px;
+         
+
+        }
+
+        .active{
+            animation-name: sprite;
+            animation-duration: 100s;
+            animation-direction: forward;
+        }
+
+        /* .congratulationBanner {
+            position: relative;
+            animation-name: congratulationBanner;
+            animation-duration: 5s;
+            animation-direction: forward;
+            top: -1000px;
+            left:200px
+        } */
+
+        .mario {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            top: 100px;
+        }
+
+
+        @keyframes sprite {
+            0% {
+                left: 200px;
+                top: 100px;
+            }
+
+            100% {
+                left: 900px;
+                top: 100px;
+            }
+        }
+
+        /* @keyframes congratulationBanner {
+            0% {
+                left: 500px;
+                top: -500px;
+            }
+
+            100% {
+                left: 500px;
+                top: 100px;
+            }
+        } */
+
+        .blink_me {
+            animation: blinker 1s linear infinite;
+        }
+
+        .done {
+            color: burlywood;
+        }
+
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .question {
+            border: 2px dashed grey;
+            font-size: 20px;
+            padding: 30px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+        }
+
+        .solution {
+            border: 2px dashed grey;
+            background-color: black;
+            color: white;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 50px;
+            text-align: left;
+        }
+
+        a {
+            text-decoration: none;
+            display: inline-block;
+            padding: 8px 16px;
+        }
+
+        a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .previous {
+            background-color: #f1f1f1;
+            color: black;
+        }
+
+        .next {
+            background-color: red;
+            color: white;
+        }
+
+        .round {
+            border-radius: 50%;
+        }
+
+        .select{
+            background-color: #0563af;
+            color: white;
+            padding: 2px;
+            width: 250px;
+            height: 35px;
+            border: none;
+            font-size: 14px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            -webkit-appearance: button;
+            appearance: button;
+            outline: none;
+            -moz-appearance:none; /* Firefox */
+            -webkit-appearance:none; /* Safari and Chrome */
+            appearance:none;
+            border-radius: 5px;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    <div class="container">
+        <div class="main">
+            <!-- <img class="congratulationBanner" src="congratulation.png" width="500px" height="300px" alt=""> -->
+
+            <div class="navigation" onchange="changeLevel()">
+                <select name="" id="" class="select">
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                    <option value="5">Level 5</option>
+                </select>
+
+                <a href="#" class="previous round">&#8249;</a>
+                <a href="#" class="next round" onclick="next()">&#8250;</a>
+
+               
+            </div>
+
+
+            </div>
+
+            <img class="sprite active" src="images/dino2fire.gif" alt="">
+            <!-- <textarea class="box" name="" id="" cols="30" rows="10"> -->
+
+            <img class="mario" src="images/cry.gif" alt="">
+
+            <div class="box">
+                <p class="question"></p>
+                <p class="solution"></p>
+            </div>
+           
+        </div>
+    </div>
+
+    <audio id="soundtrack" controls autoplay style="position: fixed; top:0px; right:0px; visibility: hidden;">
+        <source src="mp3/mario.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <audio id="congratulation" controls autoplay style="position: fixed; top:0px; right:0px; visibility: hidden;" loop>
+        <source src="mp3/congratulation.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <audio id="dinosaur" controls autoplay style="position: fixed; top:0px; right:0px; visibility: hidden;" loop>
+        <source src="mp3/dinosaur.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <canvas id="canvas" style="width: 100px; height: 100px;">Canvas is not supported in your browser.</canvas>
+
+
+</body>
+
+</html>
+<script src="questions.js"></script>
+
+<script>
+
+
+    var currentQuestion = 0
+
+    var currentChar = 0
+    var len = 0
+    var spans = []
+    var ns = null
+    var currentLevel = 1
+
+    var currentLevelQuestions = []
+
+
+    changeLevel()
+
+    function changeLevel(){
+
+        level = document.querySelector('.select').value
+        console.log(level)
+        currentLevelQuestions = []
+        questions.forEach(q => {
+            if (q.level == level)
+               currentLevelQuestions.push(q) 
+        });
+
+        console.log(currentLevelQuestions)
+        currentQuestion = 0
+
+        reset()
+    }
+
+    function next() {
+        currentQuestion++
+        reset()
+    }
+
+    function reset_animation() {
+        var el = document.querySelector('.sprite');
+        el.style.animation = 'none';
+        el.offsetHeight; /* trigger reflow */
+        el.style.animation = null; 
+        }
+
+    function reset() {
+        document.querySelector(".question").innerHTML = currentLevelQuestions[currentQuestion].question
+        document.querySelector(".solution").innerHTML = currentLevelQuestions[currentQuestion].answer
+
+        currentChar = 0
+        len = 0
+        spans = []
+
+
+        createTrigger()
+        addSpan()
+        getAllSpan()
+        ns = getCurrentSpan()
+        ns.classList.add("blink_me")
+
+      
+        document.querySelector("#congratulation").pause()
+
+        //not working must clear transition
+        //document.querySelector(".sprite").style.left = "100px"
+        console.log( document.querySelector(".sprite").style.left)
+        reset_animation()
+      
+        document.querySelector(".sprite").style.webkitAnimationPlayState = "paused"
+
+        document.querySelector(".mario").style.left = "300px";
+        document.querySelector(".mario").style.visibility = "visible";
+
+
+    }
+
+    function addSpan() {
+        var text = document.querySelector(".solution").innerHTML
+        var chars = text.split('')
+        console.log(chars.length)
+        var str = ''
+        for (let i = 0; i < chars.length; i++) {
+            if (chars[i] == "#") {
+                str += "<div></div>"
+            } else if (chars[i] == "^") {
+                str += "&nbsp;&nbsp;&nbsp;&nbsp;"
+            }
+            else {
+                str += "<span>" + chars[i] + "</span>"
+            }
+
+
+        }
+        document.querySelector(".solution").innerHTML = str
+    }
+
+
+    function getAllSpan() {
+        spans = document.querySelectorAll(".solution span")
+        len = spans.length
+    }
+
+
+    // document.querySelector(".container").onclick(() => {
+    //     document.querySelector("#soundtrack").play()
+    // })
+
+    function getNextSpan() {
+        currentChar++
+        return spans[currentChar]
+    }
+
+    function getCurrentSpan() {
+        return spans[currentChar]
+    }
+
+
+
+    function done() {
+        //loop()
+        document.querySelector("#congratulation").play()
+        document.querySelector(".sprite").style.webkitAnimationPlayState = "paused"
+        document.querySelector("#dinosaur").pause()
+    }
+
+    function logKey(e) {
+        if (currentChar >= len) {
+            done()
+            return
+        }
+
+        document.querySelector("#dinosaur").play()
+        document.querySelector(".sprite").style.webkitAnimationPlayState = "running"
+
+        console.log(`${e.code}`)
+        var key = `${e.code}`
+        console.log(key.substr(3, 4))
+        console.log(getCurrentSpan().innerHTML.toUpperCase())
+
+        nowChar = getCurrentSpan().innerHTML.toUpperCase()
+        keyChar = key.substr(3, 4)
+        if (nowChar == keyChar) {
+            process()
+        } else if (key == 'Digit9' && nowChar == '(') {
+            process()
+        } else if (key == 'Quote' && nowChar == '"') {
+            process()
+        } else if (key == 'Space' && nowChar == ' ') {
+            process()
+        } else if (key == 'Digit0' && nowChar == ')') {
+            process()
+        } else if (key == 'Equal' && nowChar == '=') {
+            process()
+        } else if (key == 'BracketLeft' && nowChar == '[') {
+            process()
+        } else if (key == 'BracketRight' && nowChar == ']') {
+            process()
+        } else if (key == 'Comma' && nowChar == ',') {
+            process()
+        } else if (key == 'Semicolon' && nowChar == ':') {
+            process()
+        } else if (key == 'Colon' && nowChar == ';') {
+            process()
+        } else if (key == 'Digit0' && nowChar == '0') {
+            process()
+        } else if (key == 'Digit1' && nowChar == '1') {
+            process()
+        } else if (key == 'Digit2' && nowChar == '2') {
+            process()
+        } else if (key == 'Digit3' && nowChar == '3') {
+            process()
+        } else if (key == 'Digit4' && nowChar == '4') {
+            process()
+        } else if (key == 'Digit5' && nowChar == '5') {
+            process()
+        } else if (key == 'Digit6' && nowChar == '6') {
+            process()
+        } else if (key == 'Digit7' && nowChar == '7') {
+            process()
+        } else if (key == 'Digit8' && nowChar == '8') {
+            process()
+        } else if (key == 'Digit9' && nowChar == '9') {
+            process()
+        } else if ((key == 'ShiftLeft' || key == 'ShiftRight') && nowChar == '+') {
+            process()
+        } else {
+            // document.querySelector(".sprite").style.webkitAnimationPlayState = "paused"; 
+        }
+
+    }
+
+    function process() {
+        ns.classList.add("done")
+        ns.classList.remove("blink_me")
+
+        //document.querySelector(".sprite").style.webkitAnimationPlayState = "running"; 
+        var obj = document.querySelector(".mario")
+        console.log(obj.style.left);
+        var leftVal = parseInt(obj.style.left, 10);
+        obj.style.left = leftVal + 30 + 'px';
+
+        ns = getNextSpan()
+        if (typeof ns !== 'undefined')
+            ns.classList.add("blink_me")
+
+    }
+    document.onkeyup = logKey;
+
+
+
+    function isCollide(a, b) {
+        var aRect = a.getBoundingClientRect();
+        var bRect = b.getBoundingClientRect();
+
+        return !(
+            ((aRect.top + aRect.height) < (bRect.top)) ||
+            (aRect.top > (bRect.top + bRect.height)) ||
+            ((aRect.left + aRect.width) < bRect.left) ||
+            (aRect.left > (bRect.left + bRect.width))
+        );
+    }
+
+    function createTrigger() {
+        trigger = setInterval(() => {
+            collide = isCollide(document.querySelector(".mario"), document.querySelector(".sprite"))
+            if (collide) {
+
+                document.querySelector(".sprite").style.webkitAnimationPlayState = "paused";
+                document.querySelector(".mario").style.visibility = "hidden";
+                clearInterval(trigger)
+            }
+
+        }, 100)
+    }
+
+</script>
+
+<script src="firework.js"></script>
